@@ -13,11 +13,12 @@ compile <directory> [destination]
   
  [destination]
   An optional argument you can supply if you want to define an output path, defaults to one directory above the supplied directory.
-
+```
+The following example command will compile all scripts located at the path "C:\Users\User\Projects\Platformer\scripts" and store the final file in the tmp directory with a file name of "compiledProjectScripts.gml"
+```
 Example:
 compile C:\Users\User\Projects\Platformer\scripts C:\tmp\compiledProjectScripts.gml
 ```
-This example command will compile all scripts located at the path "C:\Users\User\Projects\Platformer\scripts" and store the final file in the tmp directory with a file name of "compiledProjectScripts.gml"
 
 ## Updating Extension Help Information
 We all know how tedious it is to add help information manually when creating *.gml extensions, especially if you have to keep looking back at the parameter names in the source file. This command hopes to alleviate that burden.
@@ -27,8 +28,9 @@ amend <filepath>
 
  <filepath>
   The file path that of your *.yy extension file you want to update the help information for.
-
-Example:
-amend C:\Users\User\Projects\ZombieGame\extensions\windowControl\windowControl.yy
 ```
-This example command will update all help information in the supplied *.yy extension file per script, by referencing the source files for JSDoc argument information.
+The following example command will update all help information in the supplied *.yy extension file per script, by referencing the source files for JSDoc argument information.
+```
+Example:
+compile C:\Users\User\Projects\Platformer\scripts C:\tmp\compiledProjectScripts.gml
+```
