@@ -47,5 +47,5 @@ exmacros <filepath>
 The following example command will extract and add all macro information from the linked source files.
 ```
 Example:
-compile C:\Users\User\Projects\ZombieGame\extensions\ShadowEngine\ShadowEngine.yy
+exmacros C:\Users\User\Projects\ZombieGame\extensions\ShadowEngine\ShadowEngine.yy
 ```
