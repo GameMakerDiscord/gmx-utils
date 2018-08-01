@@ -60,7 +60,12 @@ Module GMXU
             newCommand( '' fills the help files with argument information
                 "amend",AddressOf cmdFillHelpFiles,
                 "<filepath>",
-                "Iterates through all the scripts within the *.yy extension file, then updates the help text of each such that it corresponds to the parameters defined in the external *.gml files"
+                "Iterates through all the scripts within the *.yy extension file, then updates the help text of each such that it corresponds to the parameters defined in the external *.gml files."
+            )
+            newCommand( '' extracts macro information and adds them as separate constants
+                "exmacros",AddressOf cmdCreateMacros,
+                "<filepath>",
+                "Iterates through all the source files within the *.yy extension file, and extracts any #macro tokens contained and inserts them into their own constant section in the extension."
             )
         End Sub
 
@@ -141,6 +146,7 @@ Module GMXU
                             Dim inputFileStream As StreamReader = My.Computer.FileSystem.OpenTextFileReader(gmlFile)
                             '' compile script data
                             Dim scriptToken As String = "#define " & Path.GetFileNameWithoutExtension(gmlFile)
+                            outputFileStream.WriteLine("") ' write line before compiling new script
                             outputFileStream.WriteLine(scriptToken)
                             While(not inputFileStream.EndOfStream)
                                 Dim scriptLine As String = inputFileStream.ReadLine()
@@ -153,6 +159,8 @@ Module GMXU
                     End While
                     outputFileStream.Close() ' submit changes
                     outputFileStream.Dispose() ' dispose of dynamic resources
+                    showMessage("Complete!", True)
+                    showMessage("Destination file created at path: " & destinationFile, True)
                 Else
                     showMessage("Invalid Directory!", False, messageType.problem)
                 End If
@@ -165,9 +173,10 @@ Module GMXU
             If(argCount=1)
                 Dim extensionFile As String = args(0).Trim("""")
                 If(My.Computer.FileSystem.FileExists(extensionFile))
-                    '' set indentation style
-                    
+                    '' store current directory
+                    Dim extensionDirectory As String = Path.GetDirectoryName(extensionFile)
                     '' decode file
+                    showMessage("Reading extension Json", True)
                     Dim jsonStr As String = ""
                     Dim jsonInputStream As StreamReader = My.Computer.FileSystem.OpenTextFileReader(extensionFile)
                     While(not jsonInputStream.EndOfStream)
@@ -176,6 +185,7 @@ Module GMXU
                     jsonInputStream.Close()
                     jsonInputStream.Dispose() ' dispose of dynamic resources
                     '' decode json
+                    showMessage("Deserialising Json", True)
                     Dim json As JObject = JsonConvert.DeserializeObject(jsonStr)
                     '' parse extension file
                     If(json.ContainsKey("files"))
@@ -183,41 +193,118 @@ Module GMXU
                             '' iterate through files
                             If(gmFile.ContainsKey("functions") And gmFile.ContainsKey("filename"))
                                 '' get the file path of the current source file
-                                Dim gmScriptFilepath As String = gmFile.GetValue("filename").Value(Of String)
-                                '' use the filepath to compile the parameters for each script, delimited by "#define"
-                                
-                                '/ TBA /'
-
-                                For each gmFunction As JObject In gmFile.GetValue("functions")
-                                    '' iterate through functions (scripts)
-                                    If(gmFunction.ContainsKey("externalName"))
-                                        '' get the external name of the script within the source file
-                                        Dim gmScriptName as String = gmFunction.GetValue("externalName").Value(Of String)
-                                        '' find parameters from source file
-
-                                        '/ TBA /'
-
-                                        '' update help
-                                        If(gmFunction.ContainsKey("help"))
-                                            Dim gmHelpFile As JValue = gmFunction.GetValue("help")
-                                            gmHelpFile.Value = "testing 1 2 3"
+                                Dim gmScriptFilepath As String = extensionDirectory & "\" & gmFile.GetValue("filename").Value(Of String)
+                                If(My.Computer.FileSystem.FileExists(gmScriptFilepath))
+                                    '' use the filepath to compile the parameters for each script, delimited by "#define"
+                                    Dim gmInputStream As StreamReader = My.Computer.FileSystem.OpenTextFileReader(gmScriptFilepath)
+                                    Dim gmScriptParameterDictionary As Dictionary(Of String, String()) = New Dictionary(Of String, String())
+                                    '' For each line of the source file, check whether the current line is a token, and then find its parameters.
+                                    Dim gmScriptNamePrevious As String = ""
+                                    Dim gmScriptName As String = "" ' vbNullString could be used, but I want to protect invalid tokens from being parsed
+                                    While (not gmInputStream.EndOfStream)
+                                        Dim gmSourceLine As String = gmInputStream.ReadLine().TrimStart(" "c)
+                                        '' parse token
+                                        If(gmSourceLine.Length>1)
+                                            If(gmSourceLine(0)="#")
+                                                Dim gmSourceToken As String() = gmSourceLine.Split(" "c)
+                                                if(gmSourceToken.Length>1)
+                                                    If(gmSourceToken(0)="#define")
+                                                        '' update name
+                                                        gmScriptName = gmSourceToken(1)
+                                                    End If
+                                                End If
+                                            End If
+                                            '' get parameters
+                                            If(gmScriptName<>"")
+                                                If(gmScriptNamePrevious<>gmScriptName)
+                                                    '' create a new parameter array and add reference to dictionary
+                                                    gmScriptParameterDictionary.Add(gmScriptName,{})
+                                                    showMessage("New Script: " & gmScriptName, True,messageType.successful)
+                                                End If
+                                                If(gmScriptParameterDictionary.ContainsKey(gmScriptName))
+                                                    '' if we are inside a script body, look for parameters for that script
+                                                    If(gmSourceLine.length>3)
+                                                        If(gmSourceLine.Substring(0,3)="///")
+                                                            If(gmSourceLine(3)=" "c)
+                                                                '' remove space from between /// and @param
+                                                                gmSourceLine = gmSourceLine.Remove(3,1)
+                                                            End If
+                                                            Dim gmParameterTokens As String() = gmSourceLine.Split(" "c)
+                                                            if(gmParameterTokens.Length>1)
+                                                                If(gmParameterTokens(0)="///@param")
+                                                                    '' add new parameter
+                                                                    Dim gmParam As String = gmParameterTokens(1)
+                                                                    gmScriptParameterDictionary(gmScriptName).Add(gmParam)
+                                                                    showMessage("New Parameter: " & gmParam, True,messageType.successful)
+                                                                End If
+                                                            End If
+                                                        End If
+                                                    End IF
+                                                End If
+                                            End If
                                         End If
-                                    End If
-                                Next
+                                        '' update previous
+                                        gmScriptNamePrevious = gmScriptName
+                                    End While
+                                    gmInputStream.Close()
+                                    gmInputStream.Dispose() ' dispose of dynamic resources
+                                    For each gmFunction As JObject In gmFile.GetValue("functions")
+                                        '' iterate through functions (scripts)
+                                        If(gmFunction.ContainsKey("externalName"))
+                                            '' get the external name of the script within the source file
+                                            Dim gmScriptExternalName as String = gmFunction.GetValue("externalName").Value(Of String)
+                                            '' get parameters using external script name
+                                            If(gmScriptParameterDictionary.ContainsKey(gmScriptExternalName))
+                                                Dim gmScriptHelp As String = ""
+                                                For Each gmParam As String In gmScriptParameterDictionary(gmScriptExternalName)
+                                                    If(gmScriptHelp<>"")
+                                                        '' add a comma between arguments
+                                                        gmScriptHelp += ","
+                                                    End If
+                                                    gmScriptHelp += gmParam
+                                                Next
+                                                gmScriptHelp = "(" & gmScriptHelp & ")"
+                                                '' update help
+                                                If(gmFunction.ContainsKey("help"))
+                                                    Dim gmHelpFile As JValue = gmFunction.GetValue("help")
+                                                    gmHelpFile.Value = gmScriptHelp
+                                                    showMessage("Updated help file for '" & gmScriptExternalName & "': " & gmScriptExternalName & gmScriptHelp, True,messageType.successful)
+                                                End If
+                                            Else
+                                                showMessage("ExternalName '" & gmScriptExternalName & "' is not defined", True,messageType.problem)
+                                            End If
+                                        Else
+                                            showMessage("Function does not contain an 'externalName' key!", True,messageType.problem)
+                                        End If
+                                    Next
+                                Else 
+                                    showMessage("File does not exist at filepath: " & gmScriptFilepath, True,messageType.problem)
+                                End If
+                            Else
+                                showMessage("Item in 'files' does not contain a 'functions' or 'filepath' key!", True,messageType.problem)
                             End If
                         Next
+                    Else
+                        showMessage("Extension file does not contain 'files' key!", True,messageType.problem)
                     End If
                     '' encode json again
+                    showMessage("Serialising Json", True)
                     jsonStr = JsonConvert.SerializeObject(json,Formatting.Indented)
                     '' write json to original extension file                    
                     Dim jsonOutputStream As StreamWriter = My.Computer.FileSystem.OpenTextFileWriter(extensionFile,false)
                     jsonOutputStream.WriteLine(jsonStr)
                     jsonOutputStream.Close()
                     jsonOutputStream.Dispose() ' dispose of dynamic resources
+                    showMessage("Complete!", True)
+                Else
+                    showMessage("Invalid Extension File!", False, messageType.problem)
                 End If
             Else
                 Throw New cmdInvalidSyntaxException
             End If
+        End Sub
+        Private Sub cmdCreateMacros(ByRef args As String())
+
         End Sub
 
         '' debug output
