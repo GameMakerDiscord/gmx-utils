@@ -29,8 +29,23 @@ amend <filepath>
  <filepath>
   The file path that of your *.yy extension file you want to update the help information for.
 ```
-The following example command will update all help information in the supplied *.yy extension file per script, by referencing the source files for JSDoc argument information.
+The following example command will update all help information of the extension file located at the path "C:\Users\User\Projects\ZombieGame\extensions\ShadowEngine\ShadowEngine.yy" per script, by referencing the source files for JSDoc argument information.
 ```
 Example:
-compile C:\Users\User\Projects\Platformer\scripts C:\tmp\compiledProjectScripts.gml
+amend C:\Users\User\Projects\ZombieGame\extensions\ShadowEngine\ShadowEngine.yy
+```
+
+## Automatically Adding Macros
+External *.gml source files don't allow for #macro tokens to be used, so having a way to automate the task of adding constants is useful for large packages
+```
+Syntax:
+exmacros <filepath>
+
+ <filepath>
+  The file path that of your *.yy extension file you want to update the macros of.
+```
+The following example command will extract and add all macro information from the linked source files.
+```
+Example:
+compile C:\Users\User\Projects\ZombieGame\extensions\ShadowEngine\ShadowEngine.yy
 ```
