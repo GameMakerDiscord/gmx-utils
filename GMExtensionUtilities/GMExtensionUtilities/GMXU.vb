@@ -14,10 +14,10 @@ Module GMXU
     End Sub
 
     '' extensions for strings
-    <Extension()>Private Function split2(ByRef str As string, separator As char(), ByVal clip As Char) As String()
+    <Extension()>Private Function split2(ByRef str As string, ByVal separator As char(), ByVal clip As Char) As String()
         return str.split2(separator,clip,clip)
     End Function
-    <Extension()>Private Function split2(ByRef str As string, separator As char(), ByVal clipBegin As Char, ByVal clipEnd As Char) As String()
+    <Extension()>Private Function split2(ByRef str As string, ByVal separator As char(), ByVal clipBegin As Char, ByVal clipEnd As Char) As String()
         '' split a string, ignoring any delimiters
         Dim outputArray As String() = {}
         Dim currentSegment As String = ""
@@ -30,18 +30,29 @@ Module GMXU
             Else
                 '' normal char, add to the current segment
                 currentSegment += currentCharacter
-                If(currentCharacter=clipBegin)
-                    '' increment stack
-                    clipStack += 1
-                ElseIf(currentCharacter=clipEnd)
-                    '' decrement stack
-                    clipStack -= 1
-                End If               
+                If(clipBegin<>clipEnd)
+                    If(currentCharacter=clipBegin)
+                        '' increment stack
+                        clipStack += 1
+                    ElseIf(currentCharacter=clipEnd)
+                        '' decrement stack
+                        clipStack -= 1
+                    End If               
+                Else If(currentCharacter=clipBegin)
+                    clipStack -= 1  '  0 -  1 = -1,  1 -  1 = 0,
+                    clipStack *= -1 ' -1 * -1 =  1,  0 * -1 = 0, => 0 becomes 1 and 1 becomes 0
+                End If
             End If
         Next
         '' add final segment
         If(currentSegment<>"") then outputArray.Add(currentSegment)
         Return outputArray
+    End Function
+    <Extension()>Private Function replaceAt(ByRef str As string, ByVal pos As Integer, ByVal newChar As Char) As String
+        Dim l As Integer = str.Length
+        If((pos<0)Or(pos>=l)) Then Return str
+        If(pos=(l-1)) Then Return str.Substring(0,pos) & newChar
+        return str.Substring(0,pos) & newChar & str.Substring(pos+1,l-pos-1)
     End Function
 
     Public Class Parser
@@ -83,6 +94,72 @@ Module GMXU
         '' decalre exception
         Private class cmdInvalidSyntaxException
             Inherits Exception
+        End Class
+
+        '' declare subclasses
+        Private Class GamemakerResourceID
+            '' create class for manipulating gamemaker IDs
+            Public Sub New()
+                ID = "00000000000000000000000000000000"
+            End Sub
+            Private Const id_length As Byte = 32
+            Private id_raw As String
+
+            '' define properties
+            Public Property ID() As String
+                Get
+                    '' Format: 00000000-0000-0000-0000-000000000000
+                    Return _
+                        id_raw.Substring(0,8) & "-" & _
+                        id_raw.Substring(8,4) & "-" & _
+                        id_raw.Substring(12,4) & "-" & _
+                        id_raw.Substring(16,4) & "-" & _
+                        id_raw.Substring(20,12)
+                End Get
+                Set(ByVal GMID As String)
+                    '' remove dashes from string
+                    GMID = GMID.Replace("-"c,"")
+                    If(GMID.Length=id_length)
+                        id_raw = GMID.ToLower
+                    End If
+                End Set
+            End Property
+
+            '' define methods
+            Public Sub increment()
+                '' increment id by count
+                Dim currentCharIndex As Integer = 0
+                Do
+                    Dim currentChar As Char = id_raw(currentCharIndex)
+                    Dim nextChar As Char
+                    select(currentChar)
+                        Case "0": nextChar = "1"
+                        Case "1": nextChar = "2"
+                        Case "2": nextChar = "3"
+                        Case "3": nextChar = "4"
+                        Case "4": nextChar = "5"
+                        Case "5": nextChar = "6"
+                        Case "6": nextChar = "7"
+                        Case "7": nextChar = "8"
+                        Case "8": nextChar = "9"
+                        Case "9": nextChar = "a"
+                        Case "a": nextChar = "b"
+                        Case "b": nextChar = "c"
+                        Case "c": nextChar = "d"
+                        Case "d": nextChar = "e"
+                        Case "e": nextChar = "f"
+                        Case Else: nextChar = "0"
+                    End Select
+                    '' replace current character
+                    id_raw = id_raw.replaceAt(currentCharIndex,nextChar)
+                    If(currentChar="f")
+                        '' go to the next character because of an overflow
+                        currentCharIndex += 1
+                    Else
+                        Exit Do
+                    End If
+                Loop
+            End Sub
         End Class
 
         '' declare commands
@@ -160,7 +237,7 @@ Module GMXU
                     outputFileStream.Close() ' submit changes
                     outputFileStream.Dispose() ' dispose of dynamic resources
                     showMessage("Complete!", True)
-                    showMessage("Destination file created at path: " & destinationFile, True)
+                    showMessage("Destination file created at path: " & destinationFile, False)
                 Else
                     showMessage("Invalid Directory!", False, messageType.problem)
                 End If
@@ -219,7 +296,7 @@ Module GMXU
                                                 If(gmScriptNamePrevious<>gmScriptName)
                                                     '' create a new parameter array and add reference to dictionary
                                                     gmScriptParameterDictionary.Add(gmScriptName,{})
-                                                    showMessage("New Script: " & gmScriptName, True,messageType.successful)
+                                                    showMessage("New Script: " & gmScriptName, False,messageType.successful)
                                                 End If
                                                 If(gmScriptParameterDictionary.ContainsKey(gmScriptName))
                                                     '' if we are inside a script body, look for parameters for that script
@@ -235,7 +312,7 @@ Module GMXU
                                                                     '' add new parameter
                                                                     Dim gmParam As String = gmParameterTokens(1)
                                                                     gmScriptParameterDictionary(gmScriptName).Add(gmParam)
-                                                                    showMessage("New Parameter: " & gmParam, True,messageType.successful)
+                                                                    showMessage("New Parameter: " & gmParam, False,messageType.successful)
                                                                 End If
                                                             End If
                                                         End If
@@ -268,7 +345,7 @@ Module GMXU
                                                 If(gmFunction.ContainsKey("help"))
                                                     Dim gmHelpFile As JValue = gmFunction.GetValue("help")
                                                     gmHelpFile.Value = gmScriptHelp
-                                                    showMessage("Updated help file for '" & gmScriptExternalName & "': " & gmScriptExternalName & gmScriptHelp, True,messageType.successful)
+                                                    showMessage("Updated help file for '" & gmScriptExternalName & "': " & gmScriptExternalName & gmScriptHelp, False,messageType.successful)
                                                 End If
                                             Else
                                                 showMessage("ExternalName '" & gmScriptExternalName & "' is not defined", True,messageType.problem)
@@ -278,7 +355,7 @@ Module GMXU
                                         End If
                                     Next
                                 Else 
-                                    showMessage("File does not exist at filepath: " & gmScriptFilepath, True,messageType.problem)
+                                    showMessage("File does not exist at filepath: " & gmScriptFilepath, False,messageType.problem)
                                 End If
                             Else
                                 showMessage("Item in 'files' does not contain a 'functions' or 'filepath' key!", True,messageType.problem)
@@ -304,7 +381,125 @@ Module GMXU
             End If
         End Sub
         Private Sub cmdCreateMacros(ByRef args As String())
-
+            Dim myId As GamemakerResourceID = New GamemakerResourceID
+            Dim argCount As Integer = args.Length
+            If(argCount=1)
+                Dim extensionFile As String = args(0).Trim("""")
+                If(My.Computer.FileSystem.FileExists(extensionFile))
+                    '' declare delegate function for getting a valid macro id
+                    Dim gmMacroGetValidID = Function(ByVal macroArray As JArray) As GamemakerResourceID
+                                                Dim macroID As GamemakerResourceID = new GamemakerResourceID()
+                                                '' iterate through all current macros and correct for any collisions
+                                                For each macroRecord As JObject In macroArray
+                                                    If(macroRecord.ContainsKey("id"))
+                                                        If(macroRecord.GetValue("id")=macroID.ID)
+                                                            '' id collision, increment macroID
+                                                            macroID.increment()
+                                                        End If
+                                                    End If
+                                                Next
+                                                '' return final macro id
+                                                Return macroID
+                                            End Function
+                    '' store current directory
+                    Dim extensionDirectory As String = Path.GetDirectoryName(extensionFile)
+                    '' decode file
+                    showMessage("Reading extension Json", True)
+                    Dim jsonStr As String = ""
+                    Dim jsonInputStream As StreamReader = My.Computer.FileSystem.OpenTextFileReader(extensionFile)
+                    While(not jsonInputStream.EndOfStream)
+                        jsonStr += jsonInputStream.ReadLine() & vbCrLf
+                    End While
+                    jsonInputStream.Close()
+                    jsonInputStream.Dispose() ' dispose of dynamic resources
+                    '' decode json
+                    showMessage("Deserialising Json", True)
+                    Dim json As JObject = JsonConvert.DeserializeObject(jsonStr)
+                    '' parse extension file
+                    If(json.ContainsKey("files"))
+                        For each gmFile As JObject In json.GetValue("files")
+                            '' iterate through files
+                            If(gmFile.ContainsKey("constants") And gmFile.ContainsKey("filename"))
+                                Dim gmConstants As JArray = gmFile.GetValue("constants")
+                                '' remove all previous constants from the array
+                                gmConstants.Clear()
+                                '' get the file path of the current source file
+                                Dim gmScriptFilepath As String = extensionDirectory & "\" & gmFile.GetValue("filename").Value(Of String)
+                                If(My.Computer.FileSystem.FileExists(gmScriptFilepath))
+                                    '' use the filepath to compile the macro names and parameters "#macro" token
+                                    Dim gmInputStream As StreamReader = My.Computer.FileSystem.OpenTextFileReader(gmScriptFilepath)
+                                    Dim gmFileText As String = ""
+                                    While (not gmInputStream.EndOfStream)
+                                        Dim gmSourceLineRaw As String = gmInputStream.ReadLine()
+                                        Dim gmSourceLine As String = gmSourceLineRaw.TrimStart(" "c)
+                                        '' parse token
+                                        If(gmSourceLine.Length>1)
+                                            If(gmSourceLine(0)="#")
+                                                Dim gmSourceToken As String() = gmSourceLine.Split({" "c},3)
+                                                if(gmSourceToken.Length>2)
+                                                    '' format: #macro <macroName> <macroData[]>
+                                                    If(gmSourceToken(0)="#macro")
+                                                        '' decode macro
+                                                        Dim gmMacroName As String = gmSourceToken(1)
+                                                        Dim gmMacroValue As String = ""
+                                                        Dim gmMacroItems As String() = gmSourceToken(2).split2({" "c},""""c)
+                                                        Do ' preparation for multi-line macros
+                                                            For each gmMacroItem As String In gmMacroItems
+                                                                gmMacroValue += gmMacroItem & " "
+                                                            Next
+                                                            Exit Do
+                                                        Loop
+                                                        '' construct new macro element
+                                                        Dim gmMacroRecord As JObject = New JObject()
+                                                        gmMacroRecord.Add("id",gmMacroGetValidID(gmConstants).ID)
+                                                        gmMacroRecord.Add("modelName","GMExtensionConstant")
+                                                        gmMacroRecord.Add("mvc","1.0")
+                                                        gmMacroRecord.Add("constantName",gmMacroName)
+                                                        gmMacroRecord.Add("hidden",false)
+                                                        gmMacroRecord.Add("value",gmMacroValue)
+                                                        '' add macro to the list of constants
+                                                        gmConstants.Add(gmMacroRecord)
+                                                        showMessage("New Macro: " & gmMacroName,false,messageType.successful)
+                                                        showMessage(" " & gmMacroValue,false)
+                                                        Continue While
+                                                    End If
+                                                End If
+                                            End If
+                                        End If
+                                        gmFileText += gmSourceLineRaw & vbCrLf ' add source line to file text
+                                    End While
+                                    gmInputStream.Close()
+                                    gmInputStream.Dispose() ' dispose of dynamic resources
+                                    '' update the source file with no macro data
+                                    Dim gmOutputStream As StreamWriter = My.Computer.FileSystem.OpenTextFileWriter(gmScriptFilepath,False)
+                                    gmOutputStream.WriteLine(gmFileText)
+                                    gmOutputStream.Close()
+                                    gmOutputStream.Dispose() ' dispose of dynamic resources
+                                Else 
+                                    showMessage("File does not exist at filepath: " & gmScriptFilepath, True,messageType.problem)
+                                End If
+                            Else
+                                showMessage("Item in 'files' does not contain a 'constants' or 'filepath' key!", True,messageType.problem)
+                            End If
+                        Next
+                    Else
+                        showMessage("Extension file does not contain 'files' key!", True,messageType.problem)
+                    End If
+                    '' encode json again
+                    showMessage("Serialising Json", True)
+                    jsonStr = JsonConvert.SerializeObject(json,Formatting.Indented)
+                    '' write json to original extension file                    
+                    Dim jsonOutputStream As StreamWriter = My.Computer.FileSystem.OpenTextFileWriter(extensionFile,false)
+                    jsonOutputStream.WriteLine(jsonStr)
+                    jsonOutputStream.Close()
+                    jsonOutputStream.Dispose() ' dispose of dynamic resources
+                    showMessage("Complete!", True)
+                Else
+                    showMessage("Invalid Extension File!", False, messageType.problem)
+                End If
+            Else
+                Throw New cmdInvalidSyntaxException
+            End If
         End Sub
 
         '' debug output
