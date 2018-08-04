@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3D64D917-9B77-48DF-9A7C-BEA5D9EC8848}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>GMExtensionUtilities.MainModule</StartupObject>
+    <StartupObject>GMExtensionUtilities.GMXU</StartupObject>
     <RootNamespace>GMExtensionUtilities</RootNamespace>
     <AssemblyName>GMExtensionUtilities</AssemblyName>
     <FileAlignment>512</FileAlignment>
@@ -72,8 +72,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GMXU.vb" />
-    <Compile Include="MainModule.vb" />
+    <Compile Include="Engine\GMXU.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -89,6 +88,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Utilities\CommandParser.vb" />
+    <Compile Include="Utilities\GameMakerBridge.vb" />
+    <Compile Include="Utilities\TypeExtensions.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -108,8 +110,8 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-    <None Include="App.config" />
-    <None Include="packages.config" />
+    <None Include="Config\App.config" />
+    <None Include="Config\packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
