@@ -2,11 +2,11 @@ C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtili
 C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\bin\Debug\GMExtensionUtilities.exe
 C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\bin\Debug\GMExtensionUtilities.pdb
 C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\bin\Debug\GMExtensionUtilities.xml
-C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\obj\Debug\GMExtensionUtilities.vbprojResolveAssemblyReference.cache
+C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\bin\Debug\Newtonsoft.Json.dll
+C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\bin\Debug\Newtonsoft.Json.xml
 C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\obj\Debug\GMExtensionUtilities.Resources.resources
 C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\obj\Debug\GMExtensionUtilities.vbproj.GenerateResource.Cache
 C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\obj\Debug\GMExtensionUtilities.exe
 C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\obj\Debug\GMExtensionUtilities.xml
 C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\obj\Debug\GMExtensionUtilities.pdb
-C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\bin\Debug\Newtonsoft.Json.dll
-C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\bin\Debug\Newtonsoft.Json.xml
+C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\obj\Debug\GMExtensionUtilities.vbprojResolveAssemblyReference.cache
