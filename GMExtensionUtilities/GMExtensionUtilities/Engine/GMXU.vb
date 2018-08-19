@@ -54,7 +54,8 @@ Module GMXU
             .description = "Compiles all the *.gml script files within the supplied directory into a single *.gml file. 'compile <directory>' Alone will output the result to a new file located above the supplied directory."
         }
         cmd.add("directory")
-        cmd.add("destination")
+        cmd.add("destination",{"d"})
+        cmd.add("mask",{"m"})
         Parser.add("compile",cmd)
         '' amend
         cmd = New Command(AddressOf cmdFillHelpRecords) With {
@@ -145,8 +146,17 @@ Module GMXU
     Private Sub cmdCompile(ByRef arguments As Command.arg())
         Dim sourceDirectory As String = arguments(0).value
         Dim destinationFile As String = sourceDirectory & ".gml"
+        Dim searchMask As String = "*"
         If(arguments.Length>1)
-            destinationFile = arguments(1).value
+            For Each arg In arguments
+                If(arg IsNot arguments(0))
+                    If(arg.containsFlag("d"))
+                        destinationFile = arg.value
+                    Else If(arg.containsFlag("m"))
+                        searchMask = arg.value
+                    End If
+                End If
+            Next
         End If
         '' decode
         If(Directory.Exists(sourceDirectory))
@@ -163,11 +173,11 @@ Module GMXU
                 Dim fileDirectory As String = directoryQueue.Dequeue()
                 displayNewLine()
                 displayMessage(INDENT & "New Directory: '" & fileDirectory & "'")
-                For Each subDirectory As String In Directory.GetDirectories(fileDirectory)
+                For Each subDirectory As String In Directory.GetDirectories(fileDirectory,searchMask)
                     '' enqueue all sub directories
                     directoryQueue.Enqueue(subDirectory)
                 Next
-                For each gmlFile As String In Directory.GetFiles(fileDirectory,"*.gml")
+                For each gmlFile As String In Directory.GetFiles(fileDirectory,searchMask & ".gml")
                     '' decode file
                     displayNewLine()
                     displayMessage(New String(INDENT,2) & "New File: '" & gmlFile & "'")
