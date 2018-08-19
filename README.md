@@ -6,18 +6,28 @@ This repository contains the source code for a Command-Line Interface (CLI) that
 Perhaps you want to store all your useful scripts in an extension to keep your project nice and tidy, but you have too many to count and don't want to manually compile a *.gml file to import into an extension, this command has you covered.
 ```
 Syntax:
-compile <directory> [destination]
+compile <directory> [<-d> <destination>] [<-m> <mask>]
 
  <directory>
   The directory the scripts you want to compile are located in.
   
+ <-d>
+  A token used to tell the parser that the following argument will contain a destination filepath.
+ 
+ <-m>
+  A token used to tell the parser that the following argument will contain a search pattern mask.
+ 
  [destination]
   An optional argument you can supply if you want to define an output path, defaults to one directory above the supplied directory.
+  
+ [mask]
+  An optional argument that if supplied will be used as a search pattern and only compile the scripts which meet its criteria, for example: "colour_*" will only compile scripts which begin with "colour_".
+   
 ```
 The following example command will compile all scripts located at the path "C:\Users\User\Projects\Platformer\scripts" and store the final file in the tmp directory with a file name of "compiledProjectScripts.gml"
 ```
 Example:
-compile C:\Users\User\Projects\Platformer\scripts C:\tmp\compiledProjectScripts.gml
+compile C:\Users\User\Projects\Platformer\scripts -d C:\tmp\compiledProjectScripts.gml
 ```
 
 ## Updating Extension Help Information
