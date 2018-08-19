@@ -17,6 +17,8 @@ Module GMXU
     '' initialise gameloop
     Private Sub gameLoop()
         displayMessage("Package Version: " & VERSION)
+        displayNewLine()
+        displayMessage("Type ""help"" to display a list of commands.")
         Do
             displayNewLine(2)
             displayMessage("> ")
