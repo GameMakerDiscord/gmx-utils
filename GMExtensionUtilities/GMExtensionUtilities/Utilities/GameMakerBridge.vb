@@ -5,6 +5,7 @@ Module GameMakerBridge
     Public Class GamemakerResourceID
         
         '' define base
+        Private Const idLength As Byte = 32
         Private Const baseChars As String = "0123456789abcdef"
 
         '' define properties
@@ -22,7 +23,7 @@ Module GameMakerBridge
             Set(ByVal GMID As String)
                 '' remove dashes from string
                 GMID = GMID.Replace("-"c,"")
-                If(GMID.Length=32)
+                If(GMID.Length=idLength)
                     Dim newID As String = ""
                     For each IDChar As Char In GMID.ToLower
                         If(baseChars.Contains(IDChar))
@@ -40,9 +41,19 @@ Module GameMakerBridge
         End Property
 
         '' create constructor
-        Public Sub New(Optional ByVal GMID As String = "00000000000000000000000000000000")
-            id = GMID
+        Public Sub New(Optional ByVal GMID As String = Nothing)
+            If(GamemakerResourceID.isValid(GMID)) Then id = GMID Else id = "00000000-0000-0000-0000-000000000000"
         End Sub
+
+        '' define shared methods
+        Public Shared Function isValid(ByVal GMID As String)
+            If(GMID = Nothing) Then Return False
+            Dim searchMask As String = ""
+            For i As Integer = 1 To idLength
+                searchMask += "[" & baseChars & "]"
+            Next
+            Return GMID.ToLower.Replace("-","") Like searchMask
+        End Function
        
         '' define methods
         Public Sub increment(ByVal count As Integer)

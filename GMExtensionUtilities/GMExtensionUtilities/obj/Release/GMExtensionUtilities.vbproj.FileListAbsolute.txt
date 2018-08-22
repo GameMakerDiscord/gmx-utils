@@ -9,3 +9,4 @@ C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtili
 C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\obj\Release\GMExtensionUtilities.exe
 C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\obj\Release\GMExtensionUtilities.xml
 C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\obj\Release\GMExtensionUtilities.pdb
+C:\Users\TateF\Programming\GMExtensionUtil\GMExtensionUtilities\GMExtensionUtilities\obj\Release\GMExtensionUtilities.vbprojResolveAssemblyReference.cache

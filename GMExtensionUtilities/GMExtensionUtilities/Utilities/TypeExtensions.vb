@@ -19,6 +19,12 @@ Module TypeExtensions
         If(pos=(l-1)) Then Return str.Substring(0,pos) & newChar
         return str.Substring(0,pos) & newChar & str.Substring(pos+1,l-pos-1)
     End Function
+    <Extension()>Public Function Replace(ByRef str As string, ByVal oldChars As Char(), ByVal newChar As Char) As String
+        For Each c As Char In oldChars
+            str = str.Replace(c,newChar)
+        Next
+        Return str
+    End Function
     <Extension()>Public Function Separate(Byref str As String, ByRef separators As char(), ByVal clipBegin As Char, ByVal clipEnd As Char) As String()
         '' splits a string into an array, but avoiding any delimiters
         Dim splitArray As String() = {}

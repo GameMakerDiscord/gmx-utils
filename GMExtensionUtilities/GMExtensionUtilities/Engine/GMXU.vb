@@ -65,7 +65,7 @@ Module GMXU
         }
         cmd.add("filepath")
         Parser.add("amend",cmd)
-        '' amend
+        '' extract macros
         cmd = New Command(AddressOf cmdCreateMacros) With {
             .threshold = 1,
             .brief = "Extracts and applies macro information",
@@ -73,6 +73,15 @@ Module GMXU
         }
         cmd.add("filepath")
         Parser.add("exmacros",cmd)
+        '' obfuscate
+        cmd = New Command(AddressOf cmdObfuscateScripts) With {
+            .threshold = 1,
+            .brief = "Obfuscates script display names",
+            .description = "Iterates through all the source files in a supplied *.yy extension file and obfuscates any scripts so they become uninteligible from within Game Maker."
+        }
+        cmd.add("filepath",{"I"})
+        cmd.add("mask",{"m"})
+        Parser.add("obfuscate",cmd)
     End Sub
 
     '' create procedures
@@ -433,6 +442,86 @@ Module GMXU
                     Else
                         displayNewLine()
                         displayMessage("Item in 'files' does not contain a 'constants' or 'filepath' key")
+                    End If
+                Next
+            Else
+                displayNewLine()
+                displayMessage("Extension file does not contain 'files' key")
+            End If
+            '' encode json again
+            displayNewLine(2)
+            displayMessage("Serialising Json")
+            jsonStr = JsonConvert.SerializeObject(json,Formatting.Indented)
+            '' write json to original extension file                    
+            Dim jsonOutputStream As StreamWriter = My.Computer.FileSystem.OpenTextFileWriter(extensionFile,false)
+            jsonOutputStream.WriteLine(jsonStr)
+            jsonOutputStream.Close()
+            jsonOutputStream.Dispose() ' dispose of dynamic resources
+            displayNewLine()
+            displayMessage("Complete!")
+        Else
+            displayMessage("Invalid Extension File")
+        End If
+    End Sub
+    Private Sub cmdObfuscateScripts(ByRef arguments As Command.arg())
+        Dim extensionFile As String = arguments(0).value
+        If(My.Computer.FileSystem.FileExists(extensionFile))
+            '' store current directory
+            Dim extensionDirectory As String = Path.GetDirectoryName(extensionFile)
+            '' get whether to reverse the obfuscation
+            Dim reverseObfuscation As Boolean = False
+            If(arguments(0).containsFlag("I"))
+                reverseObfuscation = True
+            End If
+            '' get the optional search mask
+            Dim searchMask As String = "*"
+            If(arguments.Length>1)
+                Dim arg As Command.arg = arguments(1)
+                If(arg.containsFlag("m"))
+                    searchMask = arg.value
+                End If
+            End If
+            '' decode file
+            displayMessage("Reading extension Json")
+            Dim jsonStr As String = ""
+            Dim jsonInputStream As StreamReader = My.Computer.FileSystem.OpenTextFileReader(extensionFile)
+            While(not jsonInputStream.EndOfStream)
+                jsonStr += jsonInputStream.ReadLine() & vbCrLf
+            End While
+            jsonInputStream.Close()
+            jsonInputStream.Dispose() ' dispose of dynamic resources
+            '' decode json
+            displayNewLine()
+            displayMessage("Deserialising Json")
+            displayNewLine()
+            Dim json As JObject = JsonConvert.DeserializeObject(jsonStr)
+            '' parse extension file
+            If(json.ContainsKey("files"))
+                For each gmFile As JObject In json.GetValue("files")
+                    '' iterate through files
+                    If(gmFile.ContainsKey("functions"))
+                        For each gmFunction As JObject in gmFile.GetValue("functions")
+                            If(gmFunction.ContainsKey("id") And gmFunction.ContainsKey("externalName") And gmFunction.ContainsKey("name"))
+                                Dim gmScriptId As String = gmFunction.GetValue("id").Value(Of String)
+                                Dim gmScriptName As JValue = gmFunction.GetValue("externalName")
+                                Dim gmScriptDisplayName As JValue = gmFunction.GetValue("name")
+                                If(GamemakerResourceID.isValid(gmScriptId) And (gmScriptName.Value Like searchMask))
+                                    If (reverseObfuscation)
+                                        gmScriptDisplayName.Value = gmScriptName.Value
+                                    Else
+                                        gmScriptDisplayName.Value = "Z5CR1P7_" & gmScriptId.Replace("-","").ToUpper
+                                    End If
+                                    displayNewLine()
+                                    displayMessage("Updated display name for script '" & gmScriptName.Value & "' (" & gmScriptId & ")")
+                                End If
+                            Else
+                                displayNewLine()
+                                displayMessage("Item in 'functions' does not contain an 'id', 'externalName', or 'name' key")
+                            End If
+                        Next
+                    Else
+                        displayNewLine()
+                        displayMessage("Item in 'files' does not contain a 'functions' key")
                     End If
                 Next
             Else
