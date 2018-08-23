@@ -276,7 +276,13 @@ Module GMXU
                                                     End If
                                                     Dim gmParameterTokens As String() = gmSourceLine.Split(" "c)
                                                     if(gmParameterTokens.Length>1)
-                                                        If(gmParameterTokens(0)="///@param")
+                                                        Dim gmParameterIdentifier As String = gmParameterTokens(0)
+                                                        If(
+                                                            (gmParameterIdentifier="///@param") Or
+                                                            (gmParameterIdentifier="///@parameter") Or
+                                                            (gmParameterIdentifier="///@arg") Or 
+                                                            (gmParameterIdentifier="///@argument")
+                                                        )
                                                             '' add new parameter
                                                             Dim gmParam As String = gmParameterTokens(1)
                                                             gmScriptParameterDictionary(gmScriptName).Append(gmParam)
