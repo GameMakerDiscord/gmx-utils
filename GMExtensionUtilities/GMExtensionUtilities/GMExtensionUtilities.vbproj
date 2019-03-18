@@ -94,6 +94,7 @@
     </Compile>
     <Compile Include="Utilities\CommandParser.vb" />
     <Compile Include="Utilities\GameMakerBridge.vb" />
+    <Compile Include="Utilities\RichConsoleOutput.vb" />
     <Compile Include="Utilities\TypeExtensions.vb" />
   </ItemGroup>
   <ItemGroup>
