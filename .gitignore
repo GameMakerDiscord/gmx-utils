@@ -1,0 +1,6 @@
+src/GMExtensionUtilities/bin/
+src/GMExtensionUtilities/obj/
+*.user
+*.suo
+_ReSharper.*
+*.sln.cache
