@@ -69,8 +69,8 @@
                 Return resourceId
             End Get
             Set(newId As String)
-                If (not IsValid(newId)) Then Throw New InvalidGMResourceIdException("id does not follow specification of " & _ 
-                                                                                    "00000000-0000-0000-0000-000000000000, " & _
+                If (not IsValid(newId)) Then Throw New InvalidGMResourceIdException("id does not follow specification of " & 
+                                                                                    "00000000-0000-0000-0000-000000000000, " &
                                                                                     "where 0s are any hexadecimal number.")
                 resourceId = newId
             End Set
