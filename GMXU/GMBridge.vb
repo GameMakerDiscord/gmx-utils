@@ -40,6 +40,15 @@
         Public Overrides Function ToString() As String
             Return Id
         End Function
+        Public Overrides Function Equals(Byval obj As Object) As Boolean
+            If (obj Is Nothing) Then Return False
+            If (Not (Me.GetType Is obj.GetType)) Then Return False
+            For chId As Integer = 0 To (resourceId.Length - 1)
+                If (resourceId(chId) = "-"c) Then Continue For
+                If (resourceId(chId) <> obj.resourceId(chId)) Then Return False
+            Next
+            Return True
+        End Function
         '' properties
         Public Property Id() As String
             Get
