@@ -8,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("GMExtensionUtilities")>
+<Assembly: AssemblyTitle("GMXU")>
 <Assembly: AssemblyDescription("")>
 <Assembly: AssemblyCompany("")>
-<Assembly: AssemblyProduct("GMExtensionUtilities")>
-<Assembly: AssemblyCopyright("Copyright ©  2018")>
+<Assembly: AssemblyProduct("GMXU")>
+<Assembly: AssemblyCopyright("Copyright ©  2019")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("389ae5a5-7392-4bcd-a7ca-83fdcdee6c3a")>
+<Assembly: Guid("da5d1867-1cfb-4702-b691-edfcc9af8080")>
 
 ' Version information for an assembly consists of the following four values:
 '
