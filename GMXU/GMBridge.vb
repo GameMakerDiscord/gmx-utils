@@ -21,19 +21,33 @@
             Dim mask12b As String = mask8b & mask4b
             Return Id.ToLower Like (mask8b & "-" & mask4b & "-" & mask4b & "-" & mask4b & "-" & mask12b)
         End Function
-        Public Sub Increment()
-            Increment(1)
+        Public Sub AddValue(Byval value As Integer)
+            If (value > 0) Then For i As Integer = 1 To value : Increment : Next
+            If (value < 0) Then For i As Integer = 1 To -value : Decrement : Next
         End Sub
-        Public Sub Increment(Byval count As Integer)
-
+        Public Sub Increment()
+            For pos As Integer = 0 To (resourceId.Length - 1)
+                If (resourceId(pos) = "-"c) Then Continue For
+                Dim chId As Byte = CHARS.IndexOf(resourceId(pos))
+                If (chId < (CHARS.Length - 1)) Then chId += 1 Else chId = 0
+                resourceId = resourceId.Remove(pos, 1).Insert(pos, CHARS(chId))
+                If (chId <> 0) Then Return
+            Next
+        End Sub
+        Public Sub Decrement()
+            For pos As Integer = 0 To (resourceId.Length - 1)
+                If (resourceId(pos) = "-"c) Then Continue For
+                Dim chId As Byte = CHARS.IndexOf(resourceId(pos))
+                If (chId > 0) Then chId -= 1 Else chId = CHARS.Length - 1
+                resourceId = resourceId.Remove(pos, 1).Insert(pos, CHARS(chId))
+                If (chId <> (CHARS.Length - 1)) Then Return
+            Next
         End Sub
         Public Sub Randomise()
-            Dim min As Integer = 0
-            Dim max As Integer = CHARS.Length
-            For chId As Integer = 0 To (resourceId.Length - 1)
-                If (resourceId(chId) = "-"c) Then Continue For
-                Dim ch As Char = CHARS(CInt(Math.Ceiling(Rnd * (max - 1))) + min)
-                resourceId = resourceId.Remove(chId,1).Insert(chId,ch)
+            For pos As Integer = 0 To (resourceId.Length - 1)
+                If (resourceId(pos) = "-"c) Then Continue For
+                Dim ch As Char = CHARS(CInt(Math.Ceiling(Rnd * (CHARS.Length - 1))))
+                resourceId = resourceId.Remove(pos, 1).Insert(pos, ch)
             Next
         End Sub
         '' overrides
