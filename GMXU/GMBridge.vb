@@ -8,10 +8,10 @@
         Private Dim resourceId As String
         '' constructors
         Public Sub New()
-            Id = GenerateRandomId()
+            Me.Id = GMResourceId.GenerateRandomId()
         End Sub
-        Public Sub New(Byval Id As String)
-
+        Public Sub New(Byval id As String)
+            Me.Id = id
         End Sub
         '' methods
         Public Shared Function GenerateRandomId()
@@ -19,24 +19,20 @@
         End Function
         Public Shared Function IsValid(Byval Id As String) As Boolean
             Dim anyChar As String = "[" & CHARS & "]"
-            Return Id Like ((anyChar*8) & "-" & (anyChar*4) & "-" & (anyChar*4) & "-" & (anyChar*4) & "-" & (anyChar*12))
+            Dim mask4b As String = anyChar & anyChar & anyChar & anyChar
+            Dim mask8b As String = mask4b & mask4b
+            Dim mask12b As String = mask8b & mask4b
+            Return Id.ToLower Like (mask8b & "-" & mask4b & "-" & mask4b & "-" & mask4b & "-" & mask12b)
         End Function
         '' properties
         Public Property Id() As String
             Get
-                '' format 00000000-0000-0000-0000-000000000000
-                Return String.Format(
-                    "{0}-{1}-{2}-{3}-{4}",
-                    resourceId.Substring(0,8),
-                    resourceId.Substring(8,4),
-                    resourceId.Substring(12,4),
-                    resourceId.Substring(16,4),
-                    resourceId.Substring(20))
+                Return resourceId
             End Get
             Set(newId As String)
                 If (not IsValid(newId)) Then Throw New InvalidGMResourceIdException("id does not follow specification of " & _ 
                                                                                     "00000000-0000-0000-0000-000000000000, " & _
-                                                                                    "where 0s are any hexadecimal number")
+                                                                                    "where 0s are any hexadecimal number.")
                 resourceId = newId
             End Set
         End Property
