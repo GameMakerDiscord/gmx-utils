@@ -60,6 +60,7 @@ Public Class Compile
     Public Overrides Function GetDescription() As String
         Return _
             "Use this command to package all .gml files in a project directory into a single extension file." &
+            vbCrLf & vbCrLf & vbTab & "<directory>" & vbCrLf & vbTab & " The target directory containing the scripts you wish to compile." &
             vbCrLf & vbCrLf & vbTab & "--deep" & vbCrLf & vbTab & " If this is added as an argument, then the application will perform a deep search for files." &
             vbCrLf & vbCrLf & vbTab & "-m <mask>" & vbCrLf & vbTab & " An optional argument used to define the search mask, where only scripts which satisfy the pattern are compiled." &
             vbCrLf & vbCrLf & vbTab & "-d <destination>" & vbCrLf & vbTab & " An optional argument used to define a destination path. Defaults to one directory above the source directory."

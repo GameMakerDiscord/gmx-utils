@@ -12,6 +12,5 @@
         Catch e As Exception
             Console.WriteLine("Error: " & e.Message)
         End Try
-        Console.ReadKey
     End Sub
 End Module
