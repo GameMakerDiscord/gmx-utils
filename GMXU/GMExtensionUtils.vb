@@ -1,10 +1,12 @@
-﻿Imports GMXU.CommandParser
-
+﻿
 Module GMExtensionUtils
 
     Sub Main()
-        Command.Parse({"aaaa","test"},2)
-        Console.ReadLine
+        Try
+            Command.Parse(Environment.GetCommandLineArgs(),1)
+        Catch e As Exception
+            Console.WriteLine(e.Message)
+        End Try
     End Sub
 
 End Module
