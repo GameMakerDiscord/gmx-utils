@@ -1,61 +1,20 @@
-# GMXU
+# gmx-utils
 
-This repository contains the source code for a Command-Line Interface (CLI) that can be used along side GameMaker Studio 2 to automatically truncate project scripts, manage, and manipulate extension data. This is useful for large packages where it would be a waste of time to manually update extension information for every script after every unique build.
+This repository contains the source code for a Command-Line Interface (CLI) that can be used along side Gamemaker Studio 2 to automatically truncate project scripts, manage, and manipulate extension data. This is useful for large packages where it would be a waste of time to manually update extension information for every script after every unique build.
 
-## Converting Project Scripts Into Standalone *.gml Files
-Perhaps you want to store all your useful scripts in an extension to keep your project nice and tidy, but you have too many to count and don't want to manually compile a *.gml file to import into an extension, this command has you covered.
+## Building
+Required Visual Studio with Visual Basic to compile. Simply [download the zip](https://github.com/GameMakerDiscord/GMExtensionUtilities/archive/master.zip), or clone the repository with 
 ```
-Syntax:
-compile <directory> [<-d> <destination>] [<-m> <mask>]
-
- <directory>
-  The directory the scripts you want to compile are located in.
-  
- <-d>
-  A token used to tell the parser that the following argument will contain a destination filepath.
- 
- <-m>
-  A token used to tell the parser that the following argument will contain a search pattern mask.
- 
- [destination]
-  An optional argument you can supply if you want to define an output path, defaults to one directory above the supplied directory.
-  
- [mask]
-  An optional argument that if supplied will be used as a search pattern and only compile the scripts which meet its criteria, for example: "colour_*" will only compile scripts which begin with "colour_".
-   
-```
-The following example command will compile all scripts located at the path "C:\Users\User\Projects\Platformer\scripts" and store the final file in the tmp directory with a file name of "compiledProjectScripts.gml"
-```
-Example:
-compile C:\Users\User\Projects\Platformer\scripts -d C:\tmp\compiledProjectScripts.gml
+git clone git@github.com:GameMakerDiscord/GMExtensionUtilities.git
 ```
 
-## Updating Extension Help Information
-We all know how tedious it is to add help information manually when creating *.gml extensions, especially if you have to keep looking back at the parameter names in the source file. This command hopes to alleviate that burden.
-```
-Syntax:
-amend <filepath>
+## Release
+Download the pre-built executables from https://github.com/GameMakerDiscord/GMExtensionUtilities/releases (`gmx-utils.zip`)
 
- <filepath>
-  The file path that of your *.yy extension file you want to update the help information for.
-```
-The following example command will update all help information of the extension file located at the path "C:\Users\User\Projects\ZombieGame\extensions\ShadowEngine\ShadowEngine.yy" per script, by referencing the source files for JSDoc argument information.
-```
-Example:
-amend C:\Users\User\Projects\ZombieGame\extensions\ShadowEngine\ShadowEngine.yy
-```
+## Installation
+Once you have the executable, there is no more required installation. Run the executable from your favourite command line tool.
 
-## Automatically Adding Macros
-External *.gml source files don't allow for #macro tokens to be used, so having a way to automate the task of adding constants is useful for large packages
-```
-Syntax:
-exmacros <filepath>
+If you want to go to extra mile, add the executable path to your `PATH` environment variable for easy access.
 
- <filepath>
-  The file path that of your *.yy extension file you want to update the macros of.
-```
-The following example command will extract and add all macro information from the linked source files.
-```
-Example:
-exmacros C:\Users\User\Projects\ZombieGame\extensions\ShadowEngine\ShadowEngine.yy
-```
+## Dependencies
+Newtonsoft JSON v12.0.2
