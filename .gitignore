@@ -3,6 +3,3 @@
 *.user
 *.suo
 _ReSharper.*
-*.sln
-*.sln.cache
-*.vbproj
