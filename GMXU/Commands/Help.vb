@@ -15,7 +15,7 @@
             Dim name As String = params(0)
             Dim cmd As Command = Command.GetCommand(name)
             If (cmd Is Nothing) Then Throw New ArgumentException("Command '" & name & "' does not exist")
-            Console.WriteLine(name & " " & cmd.GetSyntax() & vbCrLf & vbCrLf & vbTab & cmd.GetDescription())
+            Console.WriteLine(name & " " & cmd.GetSyntax() & vbCrLf & vbCrLf & cmd.GetDescription())
         End If
     End Sub
     Public Overrides Function GetBrief() As String
