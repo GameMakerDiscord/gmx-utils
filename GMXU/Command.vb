@@ -15,25 +15,22 @@
         If (c.Length <= i) Then Throw New ArgumentException("Params must be non-empty.")
         Dim name As String = c(i)
         If (Not commands.ContainsKey(name)) Then Throw New ArgumentException("Command '" & name & "' does not exist.")
-        Dim cmd As Command = commands(name)
-        Dim paramCount As Integer = c.Length - (i + 1)
-        Dim params(paramCount) As String
-        Array.Copy(c, i + 1, params, 0, paramCount)
-        cmd.Execute(params)
+        Dim params As List(Of String) = New List(Of String)
+        For p As Integer = (i + 1) To (c.Length - 1)
+            params.Add(c(p))
+        Next
+        commands(name).Execute(params.ToArray())
     End Sub
-    Public Function GetHelp(ByVal verbose As Boolean) As String
-        If (Not verbose) Then Return GetHelp()
-        Return _
-            "Name:" & vbCrLf & vbTab & name & vbCrLf & vbCrLf &
-            "Description:" & vbCrLf & vbTab & GetHelp() & vbCrLf & vbCrLf &
-            "Syntax:" & vbCrLf & vbTab & name & " " & GetSyntax()
+    Public Shared Function GetNames() As String()
+        Return commands.Keys.ToArray()
     End Function
-    Public Overridable Function GetHelp() As String
-        Return ""
-    End Function
-    Public Overridable Function GetSyntax() As String
-        Return ""
+    Public Shared Function GetCommand(ByVal name As String) As Command
+        If ((name = "") Or (Not commands.ContainsKey(name))) Then Return Nothing
+        Return commands(name)
     End Function
     '' interface
     Public MustOverride Sub Execute(ByVal params As String())
+    Public MustOverride Function GetBrief() As String
+    Public MustOverride Function GetDescription() As String
+    Public MustOverride Function GetSyntax() As String
 End Class
