@@ -1,36 +1,40 @@
 ﻿Module CommandParser
 
-    Public Class Parser
+    Public MustInherit Class Command
         '' variables
-        Public Shared ReadOnly commands As Dictionary(Of String, Command) = New Dictionary(Of String, Command)
-        '' constructor
-        #Disable Warning
-        Private Sub New()
-            '' Has Nothing
-        End Sub
+        Protected Shared ReadOnly commands As Dictionary(Of String, Command) = New Dictionary(Of String, Command)
         '' methods
-        Public Shared Sub Execute(ByRef c As String())
-            Execute(c, 0)
+        Public Shared Sub Parse(ByRef c As String())
+            Parse(c, 0)
         End Sub
-        Public Shared Sub Execute(ByRef c As String(), ByVal i As Integer)
+        Public Shared Sub Parse(ByRef c As String(), ByVal i As Integer)
             If (c.Length <= i) Then Throw New ArgumentException("Params must be non-empty.")
             Dim name As String = c(i)
-            If (Not commands.ContainsKey(name)) Then Throw New ArgumentException("Command " & name & " does not exist.")
+            If (Not commands.ContainsKey(name)) Then Throw New ArgumentException("Command '" & name & "' does not exist.")
             Dim cmd As Command = commands(name)
             Dim paramCount As Integer = c.Length - (i + 1)
             Dim params(paramCount) As String
             Array.Copy(c, i + 1, params, 0, paramCount)
             cmd.Execute(name,params)
         End Sub
-    End Class
-
-    Public MustInherit Class Command
-        '' methods
-        Public Function GetHelp(ByVal verbose As String) As String
+        Public Function GetHelp(ByVal verbose As Boolean) As String
             If (Not verbose) Then Return GetHelp()
+            Dim names As String = ""
+            For Each name In GetNames()
+                names += ", " & name
+            Next
+            if (names <> "") Then names = names.Remove(0,2)
             Return _
-                "Description:" & vbCrLf & vbTab & GetHelp() & vbCrLf &
+                "Name(s):" & vbCrLf & vbTab & names & vbCrLf & vbCrLf &
+                "Description:" & vbCrLf & vbTab & GetHelp() & vbCrLf & vbCrLf &
                 "Syntax:" & vbCrLf & vbTab & GetSyntax()
+        End Function
+        Public Function GetNames() As String()
+            Dim names As List(Of String) = New List(Of String)
+            For Each name In commands.Keys
+                If (commands(name) Is Me) Then names.Add(name)
+            Next
+            Return names.ToArray()
         End Function
         '' interface
         Public MustOverride Function GetHelp() As String

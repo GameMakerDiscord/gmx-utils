@@ -1,13 +1,9 @@
-﻿Module GMExtensionUtils
+﻿Imports GMXU.CommandParser
+
+Module GMExtensionUtils
 
     Sub Main()
-        Dim id As GMResourceId = New GMResourceId
-        id.Randomise
-        Console.WriteLine(id)
-        id.Increment
-        Console.WriteLine(id)
-        id.AddValue(-1)
-        Console.WriteLine(id)
+        Command.Parse({"aaaa","test"},2)
         Console.ReadLine
     End Sub
 
