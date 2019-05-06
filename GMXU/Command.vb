@@ -28,6 +28,26 @@
         If ((name = "") Or (Not commands.ContainsKey(name))) Then Return Nothing
         Return commands(name)
     End Function
+    Public Shared Function GetArgs(ByRef params As String(), ByVal token As String) As String()
+        Dim args As List(Of String) = New List(Of String)
+        If (params.Contains("-" & token)) Then
+            For i As Integer = (Array.IndexOf(params, token) + 1) To (params.Length - 1)
+                Dim arg As String = params(i)
+                If (arg.Length = 0) Then Continue For
+                If (arg(0) = "-") Then Exit For
+                args.Add(arg)
+            Next
+        End If
+        Return args.ToArray()
+    End Function
+    Public Shared Function GetArg(ByRef params As String(), ByVal token As String, ByVal [default] As String) As String
+        Dim args As String() = Command.GetArgs(params, token)
+        Dim arg As String = ""
+        For Each item In args
+            arg += " " & item
+        Next
+        If (arg <> "") Then Return arg.Substring(1) Else Return [default]
+    End Function
     '' interface
     Public MustOverride Sub Execute(ByVal params As String())
     Public MustOverride Function GetBrief() As String
