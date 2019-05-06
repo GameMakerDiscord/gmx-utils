@@ -3,7 +3,7 @@
 This repository contains the source code for a Command-Line Interface (CLI) that can be used along side Gamemaker Studio 2 to automatically truncate project scripts, manage, and manipulate extension data. This is useful for large packages where it would be a waste of time to manually update extension information for every script after every unique build.
 
 ## Building
-Required Visual Studio with Visual Basic to compile. Simply [download the zip](https://github.com/GameMakerDiscord/GMExtensionUtilities/archive/master.zip), or clone the repository with 
+Requires Visual Studio with Visual Basic to compile. Simply [download the zip](https://github.com/GameMakerDiscord/GMExtensionUtilities/archive/master.zip), or clone the repository with 
 ```
 git clone git@github.com:GameMakerDiscord/GMExtensionUtilities.git
 ```
