@@ -1,6 +1,12 @@
 ﻿Public MustInherit Class Command
     '' variables
-    Protected Shared ReadOnly commands As Dictionary(Of String, Command) = New Dictionary(Of String, Command)
+    Private Shared ReadOnly commands As Dictionary(Of String, Command) = New Dictionary(Of String, Command)
+    Private name As String
+    '' constructor
+    Public Sub New()
+        name = Me.GetType().Name.ToLower()
+        commands.Add(name, Me)
+    End Sub
     '' methods
     Public Shared Sub Parse(ByRef c As String())
         Parse(c, 0)
@@ -13,29 +19,21 @@
         Dim paramCount As Integer = c.Length - (i + 1)
         Dim params(paramCount) As String
         Array.Copy(c, i + 1, params, 0, paramCount)
-        cmd.Execute(name,params)
+        cmd.Execute(params)
     End Sub
     Public Function GetHelp(ByVal verbose As Boolean) As String
         If (Not verbose) Then Return GetHelp()
-        Dim names As String = ""
-        For Each name In GetNames()
-            names += ", " & name
-        Next
-        if (names <> "") Then names = names.Remove(0,2)
         Return _
-            "Name(s):" & vbCrLf & vbTab & names & vbCrLf & vbCrLf &
+            "Name:" & vbCrLf & vbTab & name & vbCrLf & vbCrLf &
             "Description:" & vbCrLf & vbTab & GetHelp() & vbCrLf & vbCrLf &
-            "Syntax:" & vbCrLf & vbTab & GetSyntax()
+            "Syntax:" & vbCrLf & vbTab & name & " " & GetSyntax()
     End Function
-    Public Function GetNames() As String()
-        Dim names As List(Of String) = New List(Of String)
-        For Each name In commands.Keys
-            If (commands(name) Is Me) Then names.Add(name)
-        Next
-        Return names.ToArray()
+    Public Overridable Function GetHelp() As String
+        Return ""
+    End Function
+    Public Overridable Function GetSyntax() As String
+        Return ""
     End Function
     '' interface
-    Public MustOverride Function GetHelp() As String
-    Public MustOverride Function GetSyntax() As String
-    Public MustOverride Function Execute(ByVal name As String, ByVal params As String())
+    Public MustOverride Sub Execute(ByVal params As String())
 End Class

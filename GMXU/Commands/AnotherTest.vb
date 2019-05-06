@@ -1,10 +1,10 @@
-﻿Public Class Test
+﻿Public Class AnotherTest
     Inherits Command
     '' methods
     Public Overrides Sub Execute(params() As String)
-        Console.WriteLine("Hello!")
+        Console.WriteLine("Got damned")
     End Sub
     Public Overrides Function GetHelp() As String
-        Return "A test command which says hi!"
+        Return "Another test command which says a rude word."
     End Function
 End Class
