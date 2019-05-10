@@ -8,9 +8,13 @@
             End If
         Next
         Try
+            Console.WriteLine()
             Command.Parse(Environment.GetCommandLineArgs(),1)
         Catch e As Exception
-            Console.WriteLine("Error: " & e.Message)
+            Console.ForegroundColor = ConsoleColor.DarkRed
+            Console.Write("ERROR")
+            Console.ResetColor()
+            Console.WriteLine(": " & e.Message)
         End Try
     End Sub
 End Module

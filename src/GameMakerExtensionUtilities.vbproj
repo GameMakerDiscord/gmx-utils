@@ -92,7 +92,6 @@
     <Compile Include="Commands\Compile.vb" />
     <Compile Include="Commands\ExMacros.vb" />
     <Compile Include="Commands\Help.vb" />
-    <Compile Include="Commands\Test.vb" />
     <Compile Include="Main.vb" />
     <Compile Include="GMResourceId.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
