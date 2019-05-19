@@ -5,9 +5,15 @@ Imports System.IO
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 
+''' <summary>
+''' A command which extracts macro data from .gml files and inserts them into their corresponding .yy extension file.
+''' </summary>
 Public Class ExMacros
     Inherits Command
-    '' methods
+    
+    ''' <summary>
+    ''' <see cref="Command.Execute(String())"/>
+    ''' </summary>
     Public Overrides Sub Execute(params() As String)
         If (params.Length < 1) Then Throw New ArgumentException("exmacros must contain at least one argument <filepath>.")
         Dim extensionPath As String = params(0)
@@ -74,13 +80,25 @@ Public Class ExMacros
         jsonOutput.Close()
         jsonOutput.Dispose()
     End Sub
+
+    ''' <summary>
+    ''' <see cref="Command.GetBrief()"/>
+    ''' </summary>
     Public Overrides Function GetBrief() As String
         Return "Extracts and inserts macro information."
     End Function
+
+    ''' <summary>
+    ''' <see cref="Command.GetDescription()"/>
+    ''' </summary>
     Public Overrides Function GetDescription() As String
         Return "Iterates through all the defined functions in a supplied .yy extension file and searches for any #macro definitions. It will then automatically insert those into the macro definitions of the extension." &
             vbCrLf & vbCrLf & vbTab & "<filepath>" & vbCrLf & vbTab & " The filepath of the .yy extension you wish to update the macros of."
     End Function
+
+    ''' <summary>
+    ''' <see cref="Command.GetSyntax()"/>
+    ''' </summary>
     Public Overrides Function GetSyntax() As String
         Return "<filepath>"
     End Function

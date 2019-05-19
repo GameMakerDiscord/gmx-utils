@@ -2,9 +2,15 @@
 Imports System.IO.StreamWriter
 Imports System.IO
 
+''' <summary>
+''' A command which compiles .gml scripts into a single file for easy distribution.
+''' </summary>
 Public Class Compile
     Inherits Command
-    '' methods
+    
+    ''' <summary>
+    ''' <see cref="Command.Execute(String())"/>
+    ''' </summary>
     Public Overrides Sub Execute(params() As String)
         If (params.Length < 1) Then Throw New ArgumentException("execute must contain at least one argument <directory>.")
         Dim deep As Boolean = params.Contains("--deep")
@@ -54,9 +60,17 @@ Public Class Compile
         output.Dispose()
         Console.WriteLine("File compiled!")
     End Sub
+
+    ''' <summary>
+    ''' <see cref="Command.GetBrief()"/>
+    ''' </summary>
     Public Overrides Function GetBrief() As String
         Return "Packs .gml scripts into a single file."
     End Function
+
+    ''' <summary>
+    ''' <see cref="Command.GetDescription()"/>
+    ''' </summary>
     Public Overrides Function GetDescription() As String
         Return _
             "Use this command to package all .gml files in a project directory into a single extension file." &
@@ -65,6 +79,10 @@ Public Class Compile
             vbCrLf & vbCrLf & vbTab & "-m <mask>" & vbCrLf & vbTab & " An optional argument used to define the search mask, where only scripts which satisfy the pattern are compiled." &
             vbCrLf & vbCrLf & vbTab & "-d <destination>" & vbCrLf & vbTab & " An optional argument used to define a destination path. Defaults to one directory above the source directory."
     End Function
+
+    ''' <summary>
+    ''' <see cref="Command.GetSyntax()"/>
+    ''' </summary>
     Public Overrides Function GetSyntax() As String
         Return "<directory> [--deep] [--append] [-m <mask>] [-d <destination>]"
     End Function

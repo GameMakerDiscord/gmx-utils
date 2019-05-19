@@ -4,9 +4,15 @@ Imports System.IO
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 
+''' <summary>
+''' A command which updates JSDoc help information.
+''' </summary>
 Public Class Amend
     Inherits Command
-    '' methods
+    
+    ''' <summary>
+    ''' <see cref="Command.Execute(String())"/>
+    ''' </summary>
     Public Overrides Sub Execute(params() As String)
         If (params.Length < 1) Then Throw New ArgumentException("amend must contain at least one argument <filepath>.")
         Dim extensionPath As String = params(0)
@@ -83,13 +89,25 @@ Public Class Amend
         jsonOutput.Close()
         jsonOutput.Dispose()
     End Sub
+
+    ''' <summary>
+    ''' <see cref="Command.GetBrief()"/>
+    ''' </summary>
     Public Overrides Function GetBrief() As String
         Return "Updates help information of an extension."
     End Function
+
+    ''' <summary>
+    ''' <see cref="Command.GetDescription()"/>
+    ''' </summary>
     Public Overrides Function GetDescription() As String
         Return "Iterates through all the defined functions in a supplied .yy extension file and updates the help text of each script such that it corresponds to the JSDoc parameter information." &
             vbCrLf & vbCrLf & vbTab & "<filepath>" & vbCrLf & vbTab & " The filepath of the .yy extension you wish to amend."
     End Function
+
+    ''' <summary>
+    ''' <see cref="Command.GetSyntax()"/>
+    ''' </summary>
     Public Overrides Function GetSyntax() As String
         Return "<filepath>"
     End Function

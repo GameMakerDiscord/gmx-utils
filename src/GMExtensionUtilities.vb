@@ -1,5 +1,8 @@
 ﻿Module GMExtensionUtilities
-    '' main
+    
+    ''' <summary>
+    ''' Uses reflection to instantiate all classes which inherit the <c>Console</c> class.
+    ''' </summary>
     Sub Main()
         Dim cmdType As Type = GetType(Command)
         For Each type As Type In cmdType.Assembly.GetTypes()
@@ -17,4 +20,5 @@
             Console.WriteLine(": " & e.Message)
         End Try
     End Sub
+
 End Module
