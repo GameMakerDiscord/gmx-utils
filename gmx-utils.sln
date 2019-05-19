@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "GameMakerExtensionUtilities", "src\GameMakerExtensionUtilities.vbproj", "{C85106BB-67C1-479F-B5EA-FC37C1A29089}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "gmx-utils", "src\gmx-utils.vbproj", "{C85106BB-67C1-479F-B5EA-FC37C1A29089}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

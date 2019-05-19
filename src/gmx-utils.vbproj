@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C85106BB-67C1-479F-B5EA-FC37C1A29089}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>GameMakerExtensionUtilities.Main</StartupObject>
-    <RootNamespace>GameMakerExtensionUtilities</RootNamespace>
+    <StartupObject>GMExtensionUtilities.GMExtensionUtilities</StartupObject>
+    <RootNamespace>GMExtensionUtilities</RootNamespace>
     <AssemblyName>gmx-utils</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Console</MyType>
@@ -92,7 +92,7 @@
     <Compile Include="Commands\Compile.vb" />
     <Compile Include="Commands\ExMacros.vb" />
     <Compile Include="Commands\Help.vb" />
-    <Compile Include="Main.vb" />
+    <Compile Include="GMExtensionUtilities.vb" />
     <Compile Include="GMResourceId.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

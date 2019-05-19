@@ -64,9 +64,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.GameMakerExtensionUtilities.My.MySettings
+        Friend ReadOnly Property Settings() As Global.GMExtensionUtilities.My.MySettings
             Get
-                Return Global.GameMakerExtensionUtilities.My.MySettings.Default
+                Return Global.GMExtensionUtilities.My.MySettings.Default
             End Get
         End Property
     End Module

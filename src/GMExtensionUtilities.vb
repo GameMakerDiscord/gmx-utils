@@ -1,4 +1,4 @@
-﻿Module Main
+﻿Module GMExtensionUtilities
     '' main
     Sub Main()
         Dim cmdType As Type = GetType(Command)
