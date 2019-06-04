@@ -23,7 +23,7 @@ Public Class Compile
         Dim searchQueue As Queue(Of String) = New Queue(Of String)
         searchQueue.Enqueue(source)
         Dim output As StreamWriter = My.Computer.FileSystem.OpenTextFileWriter(dest, append)
-        output.WriteLine("// THIS FILE WAS AUTOMATICALLY GENERATED USING https://github.com/GameMakerDiscord/GMExtensionUtilities BY @Kat3Nuxii")
+        output.WriteLine("// THIS FILE WAS AUTOMATICALLY GENERATED USING https://github.com/GameMakerDiscord/GMExtensionUtilities BY @katsaii")
         While (searchQueue.Count > 0)
             Dim dir As String = searchQueue.Dequeue()
             If (deep) Then
