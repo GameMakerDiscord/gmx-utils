@@ -51,7 +51,7 @@ Public Class Amend
                             ElseIf (parameterTable.ContainsKey(scriptName))
                                 If (line Like "///*") Then
                                     Dim param As String() = line.Remove(0,3).TrimStart(" "c).Split(New Char() {" "c}, 4)
-                                    If (param.Length <> 2) Then Continue While
+                                    If (param.Length < 2) Then Continue While
                                     Select Case (param(0).ToLower())
                                         Case "@param", "@parameter", "@arg", "@argument"
                                             parameterTable(scriptName).Add(param(1))
