@@ -10,17 +10,19 @@ The following commands can be used by typing `gmx-utils <command>` into the inte
  - `amend` for updating the JSDoc help information of your extension.
  - `exmacros` for extracting macros from the source files and inserting them into the IDE. (see [Macros (Constants)](https://docs2.yoyogames.com/source/_build/3_scripting/3_gml_overview/6_scope.html))
 
-## Downloads
+## Getting Started
 
-You can download the pre-built executable from https://github.com/GameMakerDiscord/gmx-utils/releases. (`gmx-utils.zip`)
+### Downloads
 
-### Getting Started
+You can download pre-built executables from the available [releases](https://github.com/GameMakerDiscord/gmx-utils/releases). (`gmx-utils.zip`)
 
-Once you have a binary, you can simply call it using `gmx-utils` in windows cmd, or `./gmx-utils` in Bash.
+### Installing
 
-Add the exe to your PATH for easy use.
+The zip file contains everything you should need, so there is no installation needed.
 
-## Requirements
+You can simply call the tool using `gmx-utils` in the windows command line. Add the exe to your environment `PATH` for easy use.
+
+### Requirements
  - Visual Studio
  - Visual Basic .NET
  - Newtonsoft JSON v12.0.2
