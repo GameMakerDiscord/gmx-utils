@@ -23,6 +23,7 @@ The zip file contains everything you should need, so there is no installation ne
 You can simply call the tool using `gmx-utils` in the windows command line. Add the exe to your environment `PATH` for easy use.
 
 ### Requirements
+If you want to build the project your self, you will need:
  - Visual Studio
  - Visual Basic .NET
  - Newtonsoft JSON v12.0.2
