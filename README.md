@@ -1,18 +1,26 @@
-# gmx-utils
+# GameMaker Extension Utilities (gmx-utils)
 
-This repository contains the source code for a Command-Line Interface that can be used along side Gamemaker Studio 2 to automatically truncate project scripts, manage, and manipulate extension data. This is useful for large packages where it would be a waste of time to manually update extension information for every script after every unique build.
+This repository contains the source code and binaries for gmx-utils; a command-line tool which can be used along side [GameMaker Studio 2](https://www.yoyogames.com/gamemaker) to automatically manage large extensions.
 
-## Building
-Requires Visual Studio with Visual Basic to compile. Simply [download the zip](https://github.com/GameMakerDiscord/gmx-utils/archive/master.zip), or clone the repository with 
-```
-git clone git@github.com:GameMakerDiscord/gmx-utils.git
-```
+## Features
 
-## Release
-Download the pre-built executables from https://github.com/GameMakerDiscord/gmx-utils/releases. (`gmx-utils.zip`)
+The following commands can be used by typing `gmx-utils <command>` into the interface:
 
-## Installation
-Once you have the executable, there is no more required installation. Simply run the executable from the command line.
+ - `compile` for converting many individual `*.gml` scripts into a single source file.
+ - `amend` for updating the JSDoc help information of your extension.
+ - `exmacros` for extracting macros from the source files and inserting them into the IDE. (see [Macros (Constants)](https://docs2.yoyogames.com/source/_build/3_scripting/3_gml_overview/6_scope.html))
 
-## Dependencies
-Newtonsoft JSON v12.0.2
+## Downloads
+
+You can download the pre-built executable from https://github.com/GameMakerDiscord/gmx-utils/releases. (`gmx-utils.zip`)
+
+### Getting Started
+
+Once you have a binary, you can simply call it using `gmx-utils` in windows cmd, or `./gmx-utils` in Bash.
+
+Add the exe to your PATH for easy use.
+
+## Requirements
+ - Visual Studio
+ - Visual Basic .NET
+ - Newtonsoft JSON v12.0.2
